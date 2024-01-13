@@ -1,13 +1,14 @@
 package co.pragra.learning.guestbookservice.services;
 
-import co.pragra.learning.guestbookservice.entities.Address;
+import co.pragra.learning.guestbookservice.dto.User;
 import co.pragra.learning.guestbookservice.entities.Guest;
-import co.pragra.learning.guestbookservice.entities.Review;
 import co.pragra.learning.guestbookservice.repositories.AddressRepo;
 import co.pragra.learning.guestbookservice.repositories.GuestRepo;
 import co.pragra.learning.guestbookservice.repositories.ReviewRepo;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +20,12 @@ public class GuestBookService {
     private final GuestRepo repo;
     private final AddressRepo addressRepo;
     private final ReviewRepo reviewRepo;
+    @Autowired
+    private RestTemplate restTemplate;
     public Guest addOrUpdateGuest(Guest guest){
-//        Address address = addressRepo.save(guest.getAddress());
-//        guest.setAddress(address);
+
+        User user = restTemplate.getForObject("http://localhost:8081/github/user/"+guest.getUsername(), User.class);
+        guest.setAvatarUrl(user.getAvatar_url());
         return repo.save(guest);
     }
 

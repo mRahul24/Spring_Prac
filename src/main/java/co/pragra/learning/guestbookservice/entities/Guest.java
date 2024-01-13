@@ -2,10 +2,7 @@ package co.pragra.learning.guestbookservice.entities;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.engine.internal.Cascade;
 
 import java.time.Instant;
@@ -17,16 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Guest {
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer guestId;
     private String firstName;
     private String lastName;
+    private String username;
+    private String avatarUrl;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
     @JoinColumn(name="addressId")
     private Address address;
 
@@ -39,5 +35,4 @@ public class Guest {
     @Transient
     @Builder.Default
     private Instant createDateTime = Instant.now();
-
 }
